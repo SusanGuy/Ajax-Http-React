@@ -13,9 +13,7 @@ class FullPost extends Component {
         !this.state.loadedContent ||
         this.state.loadedContent.id !== this.props.id
       ) {
-        const post = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts/" + this.props.id
-        );
+        const post = await axios.get("/posts/" + this.props.id);
 
         this.setState({
           loadedContent: post.data
@@ -23,6 +21,10 @@ class FullPost extends Component {
       }
     }
   }
+
+  deletePostHandler = async () => {
+    await axios.delete("/posts" + this.props.id);
+  };
 
   render() {
     let post = (
@@ -52,7 +54,9 @@ class FullPost extends Component {
           <h1>{this.state.loadedContent.title}</h1>
           <p>{this.state.loadedContent.body}</p>
           <div className="Edit">
-            <button className="Delete">Delete</button>
+            <button onClick={this.deletePostHandler} className="Delete">
+              Delete
+            </button>
           </div>
         </div>
       );

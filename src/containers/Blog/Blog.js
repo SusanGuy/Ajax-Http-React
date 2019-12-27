@@ -1,81 +1,38 @@
 import React, { Component } from "react";
-import axios from "axios";
-import Post from "../../components/Post/Post";
-import FullPost from "../../components/FullPost/FullPost";
-import NewPost from "../../components/NewPost/NewPost";
+import FullPost from "./FullPost/FullPost";
+import NewPost from "./NewPost/NewPost";
+import Posts from "./Posts/Posts";
+import { Route, NavLink } from "react-router-dom";
+
 import "./Blog.css";
 
 class Blog extends Component {
-  state = {
-    posts: [],
-    selectedPostId: null,
-    error: false
-  };
-  async componentDidMount() {
-    try {
-      const posts = await axios.get("/posts");
-      const data = posts.data.slice(0, 4);
-
-      const updatedPosts = data.map(post => {
-        return {
-          ...post,
-          author: "Max"
-        };
-      });
-
-      this.setState({
-        posts: updatedPosts
-      });
-    } catch (err) {
-      this.setState({
-        error: true
-      });
-    }
-  }
-
-  postsSelectedHandler = id => {
-    this.setState({
-      selectedPostId: id
-    });
-  };
-
   render() {
-    let error;
-    if (this.state.error) {
-      error = (
-        <p
-          style={{
-            textAlign: "center",
-            color: "red"
-          }}
-        >
-          Something went wrong!
-        </p>
-      );
-    }
-    const posts = this.state.posts.map(post => {
-      return (
-        <Post
-          author={post.author}
-          title={post.title}
-          key={post.id}
-          clicked={() => this.postsSelectedHandler(post.id)}
-        />
-      );
-    });
     return (
-      <div>
-        <section className="Posts">{posts}</section>
-        {error}
-        <section>
-          <FullPost id={this.state.selectedPostId} />
-        </section>
-        <section>
-          <NewPost />
-        </section>
+      <div className="Blog">
+        <header>
+          <nav>
+            <ul>
+              <li>
+                <NavLink to="/" exact>
+                  Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/new-post">New Post</NavLink>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <Route path="/" exact component={Posts} />
+        <Route path="/new-post" exact component={NewPost} />
       </div>
     );
   }
 }
 
 export default Blog;
+
+// <section>
+//           <FullPost id={this.state.selectedPostId} />
+//         </section>
